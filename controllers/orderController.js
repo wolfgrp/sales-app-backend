@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { sendSMS } = require('../utils/sendSMS');
 const { sendEmail } = require('../utils/sendEmail');
 const { generatePDF } = require('../utils/pdfGenerator');
 const { appendToSheet } = require('../services/googleSheets');
@@ -76,8 +75,6 @@ Thank you for your order!
     `;
 
     // Notify
-    await sendSMS(customer.phone, message);
-    await sendSMS(process.env.COMPANY_PHONE, message);
     await sendEmail([customer.email, process.env.EMAIL_USER], 'New Order', message);
 
     res.json({ success: true, message: 'Order submitted successfully!' });
