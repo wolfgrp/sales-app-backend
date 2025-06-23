@@ -1,34 +1,42 @@
 const { google } = require('googleapis');
-const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS); // Make sure this file is added securely
-const sheetId = process.env.GOOGLE_SHEET_ID;
+const { readFileSync } = require('fs');
+const path = require('path');
+
+const creds = require(path.join(__dirname, '../credentials.json'));
 
 const auth = new google.auth.GoogleAuth({
   credentials: creds,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  scopes: ['https://www.googleapis.com/auth/spreadsheets']
 });
 
-exports.appendToSheet = async (order) => {
+async function appendOrderToSheet(order) {
   const client = await auth.getClient();
   const sheets = google.sheets({ version: 'v4', auth: client });
 
-  const values = [[
-    order.salesBoy,
-    order.customer.name,
-    order.customer.phone,
-    order.customer.email || '',
-    order.customer.address,
-    order.totalItems,
-    order.totalAmount,
-    order.dateTime
-  ]];
+  const sheetId = process.env.SHEET_ID;
+
+  const values = [
+    [
+      new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      order.salesBoy,
+      order.customer.name,
+      order.customer.phone,
+      order.customer.address,
+      order.customer.email || '',
+      order.totalItems,
+      order.totalAmount,
+      order.notes || ''
+    ]
+  ];
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: sheetId,
-    range: 'Orders!A1',
+    range: 'Sheet1!A1',
     valueInputOption: 'USER_ENTERED',
-    requestBody: { values },
+    requestBody: { values }
   });
 
-  console.log('✅ Order saved to Google Sheets');
-};
+  console.log('✅ Order appended to Google Sheet');
+}
 
+module.exports = { appendOrderToSheet };
