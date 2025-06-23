@@ -2,7 +2,7 @@ const { google } = require('googleapis');
 const { readFileSync } = require('fs');
 const path = require('path');
 
-const creds = require(path.join(__dirname, '../credentials.json'));
+const creds = require('/credentials.json');
 
 const auth = new google.auth.GoogleAuth({
   credentials: creds,
