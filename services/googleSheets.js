@@ -1,5 +1,5 @@
 const { google } = require('googleapis');
-const creds = require('../credentials.json'); // Make sure this file is added securely
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS); // Make sure this file is added securely
 const sheetId = process.env.GOOGLE_SHEET_ID;
 
 const auth = new google.auth.GoogleAuth({
