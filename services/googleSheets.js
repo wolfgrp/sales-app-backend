@@ -2,7 +2,7 @@ const { google } = require('googleapis');
 const { readFileSync } = require('fs');
 
 // ✅ Use Render's absolute secret file path
-const creds = require('/var/data/credentials.json');
+const creds = require('/etc/secrets/credentials.json');
 
 
 const auth = new google.auth.GoogleAuth({
